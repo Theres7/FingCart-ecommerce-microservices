@@ -1,0 +1,67 @@
+package com.fingcart.productservice.controller;
+
+import com.fingcart.productservice.dto.ProductRequestDto;
+import com.fingcart.productservice.dto.ProductResponseDto;
+import com.fingcart.productservice.service.ProductService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/products")
+@RequiredArgsConstructor
+@Slf4j
+public class ProductController {
+
+    private final ProductService productService;
+
+    @PostMapping
+    public ResponseEntity<ProductResponseDto> createProduct(@Valid @RequestBody ProductRequestDto request) throws BadRequestException {
+        log.info("Creating new product: {}", request.getName());
+        ProductResponseDto product = productService.createProduct(request);
+        return ResponseEntity.status(201).body(product);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ProductResponseDto> getProductById(@PathVariable Long id) {
+        log.debug("Fetching product with Id: {}", id);
+        ProductResponseDto product = productService.getProductById(id);
+        return ResponseEntity.ok(product);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ProductResponseDto>> getAllProducts(
+            @PageableDefault(size = 10, page = 0) Pageable pageable) {
+        log.debug("Listing products with pagination: {}", pageable);
+        return ResponseEntity.ok(productService.getAllProducts(pageable));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ProductResponseDto> updateProduct(@PathVariable Long id,
+                                                            @Valid @RequestBody ProductRequestDto request) {
+        log.info("Updating product ID {} with data: {}", id, request.getName());
+        ProductResponseDto product = productService.updateProduct(id, request);
+        return ResponseEntity.ok(product);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+        log.warn("Deleting product with Id: {}", id);
+        productService.deleteProduct(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<Page<ProductResponseDto>> getProductsByCategory(
+            @PathVariable Long categoryId,
+            @PageableDefault(size = 10) Pageable pageable) {
+        log.debug("Fetching products for category Id: {}", categoryId);
+        return ResponseEntity.ok(productService.getProductsByCategory(categoryId, pageable));
+    }
+}
