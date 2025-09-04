@@ -5,8 +5,6 @@ import com.fingcart.categoryservice.dto.CategoryResponseDto;
 import com.fingcart.categoryservice.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
 public class CategoryController {
-
-    private static final Logger LOG = LoggerFactory.getLogger(CategoryController.class);
 
     private final CategoryService categoryService;
 
