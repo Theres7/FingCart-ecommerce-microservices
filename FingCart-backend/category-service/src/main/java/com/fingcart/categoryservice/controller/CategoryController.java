@@ -1,7 +1,7 @@
 package com.fingcart.categoryservice.controller;
 
-import com.fingcart.categoryservice.dto.CategoryRequest;
-import com.fingcart.categoryservice.dto.CategoryResponse;
+import com.fingcart.categoryservice.dto.CategoryRequestDto;
+import com.fingcart.categoryservice.dto.CategoryResponseDto;
 import com.fingcart.categoryservice.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,27 +21,27 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @PostMapping
-    public ResponseEntity<CategoryResponse> createCategory(
-            @Valid @RequestBody CategoryRequest request) {
+    public ResponseEntity<CategoryResponseDto> createCategory(
+            @Valid @RequestBody CategoryRequestDto request) {
         return ResponseEntity
                 .status(201)
                 .body(categoryService.createCategory(request));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CategoryResponse> getCategoryById(@PathVariable Long id) {
+    public ResponseEntity<CategoryResponseDto> getCategoryById(@PathVariable Long id) {
         return ResponseEntity.ok(categoryService.getCategoryById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponse> updateCategory(
+    public ResponseEntity<CategoryResponseDto> updateCategory(
             @PathVariable Long id,
-            @Valid @RequestBody CategoryRequest request) {
+            @Valid @RequestBody CategoryRequestDto request) {
         return ResponseEntity.ok(categoryService.updateCategory(id, request));
     }
 
     @GetMapping
-    public ResponseEntity<Page<CategoryResponse>> getAllCategories(
+    public ResponseEntity<Page<CategoryResponseDto>> getAllCategories(
             @RequestParam(defaultValue = "") String keyword,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
