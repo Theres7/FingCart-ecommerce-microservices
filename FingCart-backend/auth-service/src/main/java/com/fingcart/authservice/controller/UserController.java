@@ -1,0 +1,51 @@
+package com.fingcart.authservice.controller;
+
+import com.fingcart.authservice.dto.UserRequestDto;
+import com.fingcart.authservice.dto.UserResponseDto;
+import com.fingcart.authservice.service.UserService;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/users")
+@RequiredArgsConstructor
+public class UserController {
+
+    private final UserService userService;
+
+    @PostMapping
+    public ResponseEntity<UserResponseDto> registerUser(
+            @Valid @RequestBody UserRequestDto request) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(userService.registerUser(request));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
+         UserResponseDto user =  userService.getUserById(id);
+
+         return ResponseEntity.ok(user);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponseDto> updateCategory(
+            @PathVariable Long id,
+            @Valid @RequestBody UserRequestDto request) {
+        return ResponseEntity.ok(userService.updateUser(id, request));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id){
+        boolean isDeleted = userService.deleteUser(id);
+        if(isDeleted){
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+}
