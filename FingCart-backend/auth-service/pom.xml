@@ -92,13 +92,13 @@
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 		<dependency>
-			<artifactId>mapstruct-processor</artifactId>
 			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct-processor</artifactId>
 			<version>1.6.3</version>
 		</dependency>
 		<dependency>
-			<artifactId>mapstruct</artifactId>
 			<groupId>org.mapstruct</groupId>
+			<artifactId>mapstruct</artifactId>
 			<version>1.6.2</version>
 		</dependency>
 
