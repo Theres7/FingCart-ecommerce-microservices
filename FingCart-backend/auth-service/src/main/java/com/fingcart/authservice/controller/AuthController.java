@@ -8,20 +8,15 @@ import com.fingcart.authservice.dto.UserResponseDto;
 import com.fingcart.authservice.entity.AppUser;
 import com.fingcart.authservice.jwt.Jwt;
 import com.fingcart.authservice.mapper.UserMapper;
-import com.fingcart.authservice.repository.UserRepository;
 import com.fingcart.authservice.service.AuthService;
-import com.fingcart.authservice.service.JwtService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -31,8 +26,6 @@ public class AuthController {
     private final JwtConfig jwtConfig;
     private final UserMapper userMapper;
     private final AuthService authService;
-    private final AuthenticationManager authenticationManager;
-    private final JwtService jwtService;
 
     @PostMapping("/login")
     public JwtResponseDto login(
@@ -51,13 +44,12 @@ public class AuthController {
         return new JwtResponseDto(loginResult.getAccessToken().toString());
     }
 
-//    refresh token
     @PostMapping("/refresh")
     public JwtResponseDto refreshAccessToken(@CookieValue(value = "refreshToken") String refreshToken) {
         Jwt accessToken = authService.refreshAccessToken(refreshToken);
         return new JwtResponseDto(accessToken.toString());
     }
-//
+
     @GetMapping("/current-user")
     public ResponseEntity<UserResponseDto> currentUser() {
         AppUser user = authService.getCurrentUser();
