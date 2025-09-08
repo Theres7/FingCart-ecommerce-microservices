@@ -50,8 +50,8 @@
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>com.mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -77,14 +77,14 @@
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
-            <artifactId>mapstruct-processor</artifactId>
-            <groupId>org.mapstruct</groupId>
-            <version>1.6.3</version>
-        </dependency>
-        <dependency>
             <artifactId>mapstruct</artifactId>
             <groupId>org.mapstruct</groupId>
             <version>1.6.2</version>
+        </dependency>
+        <dependency>
+            <artifactId>mapstruct-processor</artifactId>
+            <groupId>org.mapstruct</groupId>
+            <version>1.6.3</version>
         </dependency>
     </dependencies>
     <dependencyManagement>
@@ -109,6 +109,11 @@
                         <path>
                             <groupId>org.projectlombok</groupId>
                             <artifactId>lombok</artifactId>
+                        </path>
+                        <path>
+                            <artifactId>mapstruct-processor</artifactId>
+                            <groupId>org.mapstruct</groupId>
+                            <version>1.6.3</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
