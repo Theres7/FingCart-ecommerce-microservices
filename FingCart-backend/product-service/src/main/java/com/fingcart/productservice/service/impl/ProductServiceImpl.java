@@ -9,8 +9,8 @@ import com.fingcart.productservice.exception.ResourceNotFoundException;
 import com.fingcart.productservice.mapper.ProductMapper;
 import com.fingcart.productservice.repository.ProductRepository;
 import com.fingcart.productservice.service.ProductService;
-import jakarta.validation.constraints.NotNull;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -90,12 +90,12 @@ public class ProductServiceImpl implements ProductService {
                 .map(productMapper::toDto);
     }
 
-    private void validateCategoryIdOrThrow(@NotNull(message = "Category ID is required") Long categoryId) {
+    private void validateCategoryIdOrThrow(Long categoryId) {
         if (categoryId == null) {
             throw new BadRequestException("Category ID is required");
         }
         try {
-            CategoryResponseDto category = webClientBuilder.build().get()
+             webClientBuilder.build().get()
                     .uri("http://CATEGORY-SERVICE/api/categories/{id}", categoryId)
                     .retrieve()
                     .onStatus( status -> status.value() == HttpStatus.NOT_FOUND.value(),
@@ -113,8 +113,7 @@ public class ProductServiceImpl implements ProductService {
                     )
                     .bodyToMono(CategoryResponseDto.class)
                     .block(); // blocking here for a synchronous service method
-        } catch (WebClientResponseException.NotFound e) {
-            throw new BadRequestException("Invalid category ID: " + categoryId);
+
         } catch (WebClientResponseException e) {
             log.error("Category-service error: status={}, body={}", e.getRawStatusCode(), e.getResponseBodyAsString());
             throw new BadRequestException("Failed to validate category. Please try again.");
@@ -123,4 +122,5 @@ public class ProductServiceImpl implements ProductService {
             throw new BadRequestException("Category validation unavailable. Please try again later.");
         }
     }
+
 }
