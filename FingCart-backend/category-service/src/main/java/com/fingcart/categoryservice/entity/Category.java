@@ -1,41 +1,44 @@
 package com.fingcart.categoryservice.entity;
 
-import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "categories", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"name"})
-})
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Document(collection = "categories")
 public class Category {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @NotBlank(message = "Category name is required")
-    @Column(nullable = false, length = 100)
+    @Size(max = 100)
+    @Indexed(unique = true)
     private String name;
 
-    @Column(length = 255)
+    @Size(max = 300)
     private String description;
 
-    @Column(name = "is_deleted", nullable = false)
+    @Field("is_deleted")
+    @NotNull
     private boolean isDeleted = false;
 
-    @CreationTimestamp
-    @Column(updatable = false)
+    @CreatedDate
     private LocalDateTime createdAt;
 
-    @UpdateTimestamp
+    @LastModifiedDate
     private LocalDateTime updatedAt;
 }

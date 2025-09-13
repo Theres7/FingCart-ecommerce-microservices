@@ -9,12 +9,12 @@ public interface CategoryService {
 
     CategoryResponseDto createCategory(CategoryRequestDto requestDto);
 
-    CategoryResponseDto getCategoryById(Long id);
+    CategoryResponseDto getCategoryById(String id);
 
-    CategoryResponseDto updateCategory(Long id, CategoryRequestDto requestDto);
+    CategoryResponseDto updateCategory(String id, CategoryRequestDto requestDto);
 
     Page<CategoryResponseDto> getAllCategories(String keyword, Pageable pageable);
 
-    void deleteCategory(Long id);
+    void deleteCategory(String id);
 
 }

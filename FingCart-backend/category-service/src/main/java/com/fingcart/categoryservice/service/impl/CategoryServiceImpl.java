@@ -34,7 +34,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryResponseDto getCategoryById(Long id) {
+    public CategoryResponseDto getCategoryById(String id) {
         Category category = categoryRepository.findById(id)
                 .filter(category1 -> !category1.isDeleted())
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with id "+id));
@@ -42,9 +42,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryResponseDto updateCategory(Long id, CategoryRequestDto requestDto) {
+    public CategoryResponseDto updateCategory(String id, CategoryRequestDto requestDto) {
         Category category = categoryRepository.findById(id)
-                .filter(category1 -> !category1.isDeleted())
+                .filter(c -> !c.isDeleted())
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with id "+id));
 
         category.setName(requestDto.getName());
@@ -62,9 +62,9 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void deleteCategory(Long id) {
+    public void deleteCategory(String id) {
         Category category = categoryRepository.findById(id)
-                .filter(category1 -> !category1.isDeleted())
+                .filter(c -> !c.isDeleted())
                 .orElseThrow(() -> new ResourceNotFoundException("Category not found with id "+id));
         category.setDeleted(true);
         categoryRepository.save(category);
