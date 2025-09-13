@@ -1,40 +1,52 @@
-server:
-  port: 9002
+#server:
+#  port: 9002
 
 spring:
   application:
     name: product-service
+  config:
+    import: configserver:http://localhost:8888
+  profiles:
+    active: dev
 
-  #PostgreSQL Configuration
-  datasource:
-    url: jdbc:postgresql://localhost:5433/product_db
-    username: ${POSTGRES_USERNAME}
-    password: ${POSTGRES_PASSWORD}
-  jpa:
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    generate-ddl: true
+    #    ***********************************************************************
+    #    Moved configurations to config server
+    #    ***********************************************************************
 
-  eureka:
-    client:
-      service-url:
-        defaultZone: http://localhost:8761/eureka/
-    instance:
-      hostname: localhost
-      preferIpAddress: false
 
-  # Actuator Configuration
-  management:
-    endpoints:
-      web:
-      exposure:
-        include: health,info
-        base-path: /manage
-    endpoint:
-      health:
-        show-details: always
+
+
+
+#  #PostgreSQL Configuration
+#  datasource:
+#    url: jdbc:postgresql://localhost:5433/product_db
+#    username: ${POSTGRES_USERNAME}
+#    password: ${POSTGRES_PASSWORD}
+#  jpa:
+#    properties:
+#      hibernate:
+#        dialect: org.hibernate.dialect.PostgreSQLDialect
+#        format_sql: true
+#    hibernate:
+#      ddl-auto: update
+#    show-sql: true
+#    generate-ddl: true
+#
+#  eureka:
+#    client:
+#      service-url:
+#        defaultZone: http://localhost:8761/eureka/
+#    instance:
+#      hostname: localhost
+#      preferIpAddress: false
+#
+#  # Actuator Configuration
+#  management:
+#    endpoints:
+#      web:
+#      exposure:
+#        include: health,info
+#        base-path: /manage
+#    endpoint:
+#      health:
+#        show-details: always
