@@ -38,7 +38,7 @@ public class Product {
     private boolean isDeleted = false;
 
     @Column(name = "category_id", nullable = false)
-    private Long categoryId;
+    private String categoryId;
 
     @Column(name = "seller_id")
     private Long userId; //seller

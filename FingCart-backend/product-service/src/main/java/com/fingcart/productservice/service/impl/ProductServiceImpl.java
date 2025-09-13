@@ -84,13 +84,13 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public Page<ProductResponseDto> getProductsByCategory(Long categoryId, Pageable pageable) {
+    public Page<ProductResponseDto> getProductsByCategory(String categoryId, Pageable pageable) {
         validateCategoryIdOrThrow(categoryId);
         return productRepository.findByCategoryIdAndIsDeletedFalse(categoryId, pageable)
                 .map(productMapper::toDto);
     }
 
-    private void validateCategoryIdOrThrow(Long categoryId) {
+    private void validateCategoryIdOrThrow(String categoryId) {
         if (categoryId == null) {
             throw new BadRequestException("Category ID is required");
         }

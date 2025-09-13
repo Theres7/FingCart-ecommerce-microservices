@@ -17,5 +17,5 @@ public interface ProductService {
 
     void deleteProduct(Long id);
 
-    Page<ProductResponseDto> getProductsByCategory(Long categoryId, Pageable pageable);
+    Page<ProductResponseDto> getProductsByCategory(String categoryId, Pageable pageable);
 }

@@ -70,7 +70,7 @@ public class ProductController {
 
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<Page<ProductResponseDto>> getProductsByCategory(
-            @PathVariable Long categoryId,
+            @PathVariable String categoryId,
             @PageableDefault(size = 10) Pageable pageable) {
         log.debug("Fetching products for category Id: {}", categoryId);
         return ResponseEntity.ok(productService.getProductsByCategory(categoryId, pageable));

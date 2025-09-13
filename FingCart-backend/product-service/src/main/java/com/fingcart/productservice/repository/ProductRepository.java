@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProductRepository extends JpaRepository<Product,Long> {
     Page<Product> findByIsDeletedFalse(Pageable pageable);
-    Page<Product> findByCategoryIdAndIsDeletedFalse(Long categoryId, Pageable pageable);
+    Page<Product> findByCategoryIdAndIsDeletedFalse(String categoryId, Pageable pageable);
 }
