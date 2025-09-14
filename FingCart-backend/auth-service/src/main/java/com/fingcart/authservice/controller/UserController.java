@@ -7,8 +7,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -20,24 +18,23 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserResponseDto> registerUser(
-            @Valid @RequestBody UserRequestDto request) {
+            @Valid @RequestBody UserRequestDto requestDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(userService.registerUser(request));
+                .body(userService.registerUser(requestDto));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
          UserResponseDto user =  userService.getUserById(id);
-
          return ResponseEntity.ok(user);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDto> updateUser(
             @PathVariable Long id,
-            @Valid @RequestBody UserRequestDto request) {
-        return ResponseEntity.ok(userService.updateUser(id, request));
+            @Valid @RequestBody UserRequestDto requestDto) {
+        return ResponseEntity.ok(userService.updateUser(id, requestDto));
     }
 
     @DeleteMapping("/{id}")
@@ -48,4 +45,5 @@ public class UserController {
         }
         return ResponseEntity.notFound().build();
     }
+
 }
