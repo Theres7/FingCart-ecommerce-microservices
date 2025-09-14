@@ -41,10 +41,6 @@ application-*.yaml
 !application-example.properties
 !application-example.yml
 
-# Environment files
-.env
-*.env
-
 # Keystores / certificates
 *.jks
 *.p12

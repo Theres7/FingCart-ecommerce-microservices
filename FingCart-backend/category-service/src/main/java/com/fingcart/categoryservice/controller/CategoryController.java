@@ -5,6 +5,7 @@ import com.fingcart.categoryservice.dto.CategoryResponseDto;
 import com.fingcart.categoryservice.service.CategoryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.data.domain.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/categories")
 @RequiredArgsConstructor
+@RefreshScope
 public class CategoryController {
 
     private final CategoryService categoryService;
