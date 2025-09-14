@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Setter
 @Getter
 @NoArgsConstructor
@@ -14,4 +16,5 @@ public class UserResponseDto {
     private String name;
     private String username;
     private String email;
+    private List<AddressResponseDto> addresses;
 }
