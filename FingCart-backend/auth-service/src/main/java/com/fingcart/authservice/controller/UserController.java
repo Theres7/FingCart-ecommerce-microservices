@@ -5,15 +5,15 @@ import com.fingcart.authservice.dto.UserResponseDto;
 import com.fingcart.authservice.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
+@RefreshScope
 public class UserController {
 
     private final UserService userService;
@@ -29,7 +29,6 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
          UserResponseDto user =  userService.getUserById(id);
-
          return ResponseEntity.ok(user);
     }
 
