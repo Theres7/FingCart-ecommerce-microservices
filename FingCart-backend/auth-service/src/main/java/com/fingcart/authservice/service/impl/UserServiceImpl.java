@@ -2,6 +2,7 @@ package com.fingcart.authservice.service.impl;
 
 import com.fingcart.authservice.dto.UserRequestDto;
 import com.fingcart.authservice.dto.UserResponseDto;
+import com.fingcart.authservice.entity.Address;
 import com.fingcart.authservice.entity.AppUser;
 import com.fingcart.authservice.entity.Role;
 import com.fingcart.authservice.exception.UserNotFoundException;
@@ -11,6 +12,8 @@ import com.fingcart.authservice.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +34,20 @@ public class UserServiceImpl implements UserService {
                 .role(Role.USER)
                 .build();
 
+        if (userRequestDto.getAddresses() != null) {
+            List<Address> addresses = userRequestDto.getAddresses().stream()
+                    .map(addressRequestDto -> Address.builder()
+                            .state(addressRequestDto.getState())
+                            .district(addressRequestDto.getDistrict())
+                            .city(addressRequestDto.getCity())
+                            .street(addressRequestDto.getStreet())
+                            .pincode(addressRequestDto.getPincode())
+                            .user(user)
+                            .build())
+                    .toList();
+            user.setAddresses(addresses);
+        }
+
         AppUser savedAppUser = userRepository.save(user);
         return userMapper.toDto(savedAppUser);
     }
@@ -43,11 +60,25 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto updateUser(Long id, UserRequestDto request) {
-        AppUser user = userRepository.findById(id).orElseThrow( () -> new UserNotFoundException("U"));
+        AppUser user = userRepository.findById(id).orElseThrow( () -> new UserNotFoundException("User not found with id " + id));
         user.setName(request.getName());
         user.setUsername(request.getUsername());
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
+
+        if(request.getAddresses() != null){
+            List<Address> addresses = request.getAddresses().stream()
+                    .map(addressRequestDto -> Address.builder()
+                            .state(addressRequestDto.getState())
+                            .district(addressRequestDto.getDistrict())
+                            .city(addressRequestDto.getCity())
+                            .street(addressRequestDto.getStreet())
+                            .pincode(addressRequestDto.getPincode())
+                            .user(user)
+                            .build())
+                    .toList();
+            user.setAddresses(addresses);
+        }
         AppUser updatedAppUser = userRepository.save(user);
         return userMapper.toDto(updatedAppUser);
     }
