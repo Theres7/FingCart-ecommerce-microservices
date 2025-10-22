@@ -1,0 +1,20 @@
+/* .actions {
+  padding: 10px;
+} */
+
+.btn-action {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 6%;
+  color: white;
+  border: none;
+  font-weight: 400;
+}
+
+.addToCart {
+  background-color: rgb(21, 62, 102);
+}
+
+.wishlist {
+  background-color: rgb(2, 158, 186);
+}

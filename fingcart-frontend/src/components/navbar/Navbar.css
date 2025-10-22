@@ -1,0 +1,100 @@
+.nav-bar{
+  position:relative;
+  background-color: rgb(5, 51, 79);
+  height: 60px;
+  width: 100%;
+  padding:10px;
+
+}
+
+
+.nav-ul{
+  position: absolute;
+  top: 14px;
+  left: 200px;
+}
+
+.nav-li{
+  display: inline-block;
+  margin-right: 25px;
+}
+
+
+.nav-a {
+   color: white;
+   text-decoration: none;
+}
+
+
+.nav-a:hover {
+  border: solid 2px white;
+  padding: 10px;
+}
+
+.three-bar{
+  width: 30px;
+  height: 2px;
+  background-color: white;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.nav-side-menu-ul {
+  position: absolute;
+  top: 14px;
+  left: 60px;
+  
+}
+
+
+/* .nav-side-menu-ul{
+  position: absolute;
+  top: 14px;
+  left: 80px;
+} */
+
+/* .all-head {
+  position: absolute;
+  left: 48px;
+} */
+
+.menu-box {
+  position: relative;
+  top: -6px;
+  left: 73px;
+  height: 44px;
+  width: 106px;
+  /* background-color: rgb(63, 191, 114); */
+}
+
+.nav-menu-a {
+  position: absolute;
+  top: -10px;
+  right: 135px;
+  display: inline-block;
+  color: white;
+  text-decoration: none;
+  /* height: 50px;
+  width: 50px; */
+}
+
+.menu-icon{
+  position: absolute;
+  top: 20px;
+  left: 55px;
+  display: flex;
+  flex-direction: column;
+}
+
+.all-menu {
+  position: absolute;
+  top: 17px;
+  left: 95px;
+  color: white;
+  text-decoration: none;
+}
+
+.menu-box:hover{
+  border: solid 2px white;
+}
+
