@@ -40,6 +40,7 @@ public class ProductServiceImpl implements ProductService {
                 .description(request.getDescription())
                 .price(request.getPrice())
                 .quantity(request.getQuantity())
+                .imageUrl(request.getImageUrl())
                 .categoryId(request.getCategoryId())
                 .isDeleted(false)
                 .build();
@@ -70,6 +71,7 @@ public class ProductServiceImpl implements ProductService {
         product.setDescription(request.getDescription());
         product.setPrice(request.getPrice());
         product.setQuantity(request.getQuantity());
+        product.setImageUrl(request.getImageUrl());
         product.setCategoryId(request.getCategoryId());
         return productMapper.toDto(productRepository.save(product));
     }

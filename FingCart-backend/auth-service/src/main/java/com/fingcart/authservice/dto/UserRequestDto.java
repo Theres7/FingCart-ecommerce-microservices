@@ -1,5 +1,6 @@
 package com.fingcart.authservice.dto;
 
+import com.fingcart.authservice.entity.Role;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

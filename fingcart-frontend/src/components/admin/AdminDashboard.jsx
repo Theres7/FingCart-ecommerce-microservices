@@ -17,52 +17,16 @@ function AdminDashboard() {
   const [products, setProducts] = useState([]);
   const [token, setToken] = useState('');
 
-
-  const addCategory = () => {
-
-    axios.post('http://localhost:9000/api/categories', {
-     name: 'Watches',
-      description: 'Smartwatches, digital watches and analog watches with metal strapes'
-
-    })
-    .then(response => console.log('Adding User data', response.data))
-    .catch(error => console.log('Error while adding User', error));
- 
-    if (category) {
-      setCategories([...categories, category]);
-      setCategory('');
-    }
-  };
-
-
-
-  const addProduct = () => {
-
-    axios.post('http://localhost:9000/api/products', {
-      name: 'Watches',
-       description: 'Smartwatches, digital watches and analog watches with metal strapes'
- 
-     })
-     .then(response => console.log('Adding User data', response.data))
-     .catch(error => console.log('Error while adding User', error));
-  
-    if (product) {
-      setProducts([...products, product]);
-      setProduct('');
-    }
-  };
-
-
   return (
     <>
       <DashboardSideBar>
         <Container>
           <DashboardHome/>
           {/* <Typography variant="h4" my={4}>Admin Dashboard</Typography> */}
-          {/* <Typography variant="h5">Categories</Typography>
-          <CategoryTable/> */}
-          {/* <Typography variant="h5">Products</Typography>
-          <ProductTable/> */}
+          <Typography variant="h5">Categories</Typography>
+          <CategoryTable/>
+          <Typography variant="h5">Products</Typography>
+          <ProductTable/>
         </Container>
 
           {/* <Container>            

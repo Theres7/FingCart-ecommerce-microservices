@@ -43,6 +43,9 @@ public class Product {
     @Column(name = "seller_id")
     private Long userId; //seller
 
+    @Column(name = "image_url")
+    private String imageUrl;
+
     @CreationTimestamp
     @Column(updatable = false)
     private LocalDateTime createdAt;

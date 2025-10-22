@@ -24,6 +24,10 @@ public class ProductRequestDto {
     @Min(value = 0, message = "Quantity cannot be negative")
     private Integer quantity;
 
+    @NotNull(message = "Image is required")
+    private String imageUrl;
+
     @NotNull(message = "Category ID is required")
     private String categoryId;
+
 }

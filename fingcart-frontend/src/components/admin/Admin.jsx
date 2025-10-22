@@ -15,50 +15,7 @@ function Admin() {
         alert('Invalid credentials');
       }
 
-      
     };
-  
-    // useEffect( () => {
-    //   const storeLocal = localStorage.getItem("adminToken");
-    //   console.log("Get adminToken: ", storeLocal);
-    // }, [])
-  
-  
-  
-    const addCategory = () => {
-  
-      axios.post('http://localhost:9000/api/categories', {
-       name: 'Watches',
-        description: 'Smartwatches, digital watches and analog watches with metal strapes'
-  
-      })
-      .then(response => console.log('Adding User data', response.data))
-      .catch(error => console.log('Error while adding User', error));
-   
-      if (category) {
-        setCategories([...categories, category]);
-        setCategory('');
-      }
-    };
-  
-  
-  
-    const addProduct = () => {
-  
-      axios.post('http://localhost:9000/api/products', {
-        name: 'Watches',
-         description: 'Smartwatches, digital watches and analog watches with metal strapes'
-   
-       })
-       .then(response => console.log('Adding User data', response.data))
-       .catch(error => console.log('Error while adding User', error));
-    
-      if (product) {
-        setProducts([...products, product]);
-        setProduct('');
-      }
-    };
-  
   
     return (
       <>

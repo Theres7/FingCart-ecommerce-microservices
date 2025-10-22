@@ -35,9 +35,9 @@ build/
 ##############################
 
 # Local application configs
-application-*.properties
-application-*.yml
-application-*.yaml
+/application-*.properties
+/application-*.yml
+/application-*.yaml
 !application-example.properties
 !application-example.yml
 

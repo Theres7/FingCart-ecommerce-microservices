@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 
-
 function SideMenu() {
 
   // const [isSideMenuOpen, setIsSideMenuOpen] = useState(false);

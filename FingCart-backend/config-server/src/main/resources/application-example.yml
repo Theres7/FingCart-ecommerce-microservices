@@ -10,5 +10,6 @@ spring:
       server:
         git:
           uri: https://github.com/Theres7/FingCart-configurations
+          default-label: main
           username: ${GIT_USERNAME}
           password: ${GIT_TOKEN}

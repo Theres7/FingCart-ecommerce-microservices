@@ -43,14 +43,23 @@ function App() {
             <ProductProvider>
                <Home />
            </ProductProvider>} />
-          <Route path="/admin/dashboard" element={<AdminDashboard />} />
+          <Route path="/admin/dashboard" element={
+            <ProductProvider>
+              <AdminDashboard />
+            </ProductProvider>} />
+            
           <Route path="/products/:id" element={<ProductDetails />} />
-          <Route path="/admin/dashboard/all-products" element={<ProductTable />} />
+          <Route path="/admin/dashboard/all-products" element={
+            <ProductProvider>
+              <ProductTable />
+           </ProductProvider>} />
 
           <Route 
           path="/category/:categoryName" 
           element={
+            <ProductProvider>
               <CategoryPage />
+           </ProductProvider>
           } 
         />
         

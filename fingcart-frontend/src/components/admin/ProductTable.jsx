@@ -1,32 +1,35 @@
 import React from 'react'
 import DashboardTable from './DashboardTable';
+import { useProducts } from '../../context/ProductContext';
 
 function ProductTable() {
-  const products = [
-    {
-      "id": 3,
-      "name": "Safari Bags",
-      "description": "Popular, Best quality",
-      "price": 3000.00,
-      "quantity": 20,
-      "imageUrl": "https://placehold.co/600x400",
-      "categoryId": "68ca4d2b17556094354be368",
-      "createdAt": "2025-09-17T10:53:31.535446",
-      "updatedAt": "2025-09-17T11:25:28.687886"
-  },
+//   const products = [
+//     {
+//       "id": 3,
+//       "name": "Safari Bags",
+//       "description": "Popular, Best quality",
+//       "price": 3000.00,
+//       "quantity": 20,
+//       "imageUrl": "https://placehold.co/600x400",
+//       "categoryId": "68ca4d2b17556094354be368",
+//       "createdAt": "2025-09-17T10:53:31.535446",
+//       "updatedAt": "2025-09-17T11:25:28.687886"
+//   },
   
-  {
-    "id": 4,
-    "name": "Dell Bags",
-    "description": "Popular, Best quality",
-    "price": 3000.6990,
-    "quantity": 20,
-    "imageUrl": "https://placehold.co/600x400",
-    "categoryId": "68ca4d2b17556094354be368",
-    "createdAt": "2025-09-17T10:53:31.535446",
-    "updatedAt": "2025-09-17T12:25:28.687886"
-}
-]
+//   {
+//     "id": 4,
+//     "name": "Dell Bags",
+//     "description": "Popular, Best quality",
+//     "price": 3000.6990,
+//     "quantity": 20,
+//     "imageUrl": "https://placehold.co/600x400",
+//     "categoryId": "68ca4d2b17556094354be368",
+//     "createdAt": "2025-09-17T10:53:31.535446",
+//     "updatedAt": "2025-09-17T12:25:28.687886"
+// }
+// ]
+
+const { products } = useProducts();
 
 const columns = [
   { 
