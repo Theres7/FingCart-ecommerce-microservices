@@ -14,27 +14,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-//import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
 @Slf4j
 @RefreshScope
-//@CrossOrigin(origins = "http://localhost:5173")
 public class ProductController {
 
     private final ProductService productService;
-    private static final String UPLOAD_DIR = "uploads/";
 
     @PostMapping
-//    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponseDto> createProduct(@Valid @RequestBody ProductRequestDto request) throws BadRequestException {
         log.info("Creating new product: {}", request.getName());
         ProductResponseDto product = productService.createProduct(request);
@@ -87,12 +78,4 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductsByCategory(categoryId, pageable));
     }
 
-    @PostMapping("/upload")
-    public String uploadImage(@RequestParam("file") MultipartFile file) throws Exception {
-        Path path = Paths.get(UPLOAD_DIR + file.getOriginalFilename());
-        Files.createDirectories(path.getParent());
-        Files.write(path, file.getBytes());
-
-        return "File uploaded: " + path.toString();
-    }
 }

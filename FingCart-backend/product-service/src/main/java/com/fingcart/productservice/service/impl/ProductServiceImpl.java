@@ -10,7 +10,6 @@ import com.fingcart.productservice.mapper.ProductMapper;
 import com.fingcart.productservice.repository.ProductRepository;
 import com.fingcart.productservice.service.ProductService;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
