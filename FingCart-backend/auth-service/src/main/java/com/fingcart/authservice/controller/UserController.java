@@ -14,18 +14,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
 @RefreshScope
-//@CrossOrigin(origins = "http://localhost:5173")
 public class UserController {
 
     private final UserService userService;
 
-    @PostMapping
-    public ResponseEntity<UserResponseDto> registerUser(
-            @Valid @RequestBody UserRequestDto requestDto) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(userService.registerUser(requestDto));
-    }
+//    @PostMapping
+//    public ResponseEntity<UserResponseDto> registerUser(
+//            @Valid @RequestBody UserRequestDto requestDto) {
+//        return ResponseEntity
+//                .status(HttpStatus.CREATED)
+//                .body(userService.registerUser(requestDto));
+//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {

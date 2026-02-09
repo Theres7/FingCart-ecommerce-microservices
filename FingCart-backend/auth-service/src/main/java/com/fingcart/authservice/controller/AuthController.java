@@ -1,14 +1,12 @@
 package com.fingcart.authservice.controller;
 
 import com.fingcart.authservice.config.JwtConfig;
-import com.fingcart.authservice.dto.JwtResponseDto;
-import com.fingcart.authservice.dto.LoginRequestDto;
-import com.fingcart.authservice.dto.LoginResponseDto;
-import com.fingcart.authservice.dto.UserResponseDto;
+import com.fingcart.authservice.dto.*;
 import com.fingcart.authservice.entity.AppUser;
 import com.fingcart.authservice.jwt.Jwt;
 import com.fingcart.authservice.mapper.UserMapper;
 import com.fingcart.authservice.service.AuthService;
+import com.fingcart.authservice.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -16,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.BadCredentialsException;
 
 import org.springframework.web.bind.annotation.*;
 
@@ -24,17 +21,19 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
 @RefreshScope
-//@CrossOrigin(origins = "http://localhost:5173")
-@CrossOrigin(
-        origins = "http://localhost:5173",
-        allowedHeaders = "*",
-        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.OPTIONS},
-        allowCredentials = "true"
-)
 public class AuthController {
     private final JwtConfig jwtConfig;
     private final UserMapper userMapper;
     private final AuthService authService;
+    private final UserService userService;
+
+    @PostMapping("/register")
+    public ResponseEntity<UserResponseDto> registerUser(
+            @Valid @RequestBody UserRequestDto requestDto) {
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(userService.registerUser(requestDto));
+    }
 
     @PostMapping("/login")
     public JwtResponseDto login(
@@ -68,8 +67,4 @@ public class AuthController {
         return ResponseEntity.notFound().build();
     }
 
-    @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<Void> BadCredentialsException(){
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-    }
 }

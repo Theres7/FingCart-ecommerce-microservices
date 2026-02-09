@@ -5,6 +5,7 @@ import com.fingcart.authservice.dto.UserResponseDto;
 import com.fingcart.authservice.entity.Address;
 import com.fingcart.authservice.entity.AppUser;
 import com.fingcart.authservice.entity.Role;
+import com.fingcart.authservice.exception.UserAlreadyExistsException;
 import com.fingcart.authservice.exception.UserNotFoundException;
 import com.fingcart.authservice.mapper.UserMapper;
 import com.fingcart.authservice.repository.UserRepository;
@@ -25,6 +26,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponseDto registerUser(UserRequestDto userRequestDto) {
+
+        if (userRepository.existsByUsername(userRequestDto.getUsername())) {
+            throw new UserAlreadyExistsException("Username is already taken");
+        }
+
+        if (userRepository.existsByEmail(userRequestDto.getEmail())) {
+            throw new UserAlreadyExistsException("Email is already registered");
+        }
 
         AppUser user = AppUser.builder()
                 .name(userRequestDto.getName())
