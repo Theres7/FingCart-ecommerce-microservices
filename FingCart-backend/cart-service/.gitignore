@@ -39,6 +39,7 @@ application-*.properties
 application-*.yml
 application-*.yaml
 !application-example.properties
+!application-example.yaml
 
 # Environment files
 .env
