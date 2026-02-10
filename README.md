@@ -13,12 +13,15 @@ Secure user authentication and authorization are implemented using JWT tokens.
 ## Prerequisites
 
 - **Java 17** or higher
-- **Spring Boot 3.5.5**
+- **Spring Boot 3.x**
 - **Maven** 
 - **PostgreSQL**
 - **MySQL**
+- **MongoDB** (NoSQL database)
 - **Eureka**
-- **Reactive Gateway**
+- **Reactive Gateway** (API gateway)
+- **Docker** (containerization)
+- **ConfigServer** (centralized configuration management)
 
 ## Microservices
 
@@ -34,14 +37,7 @@ The application consists of the following microservices: auth-service, category-
  - **API Gateway**:
    - Single entry point for all clients.
    - Routes incoming requests to respective services.
+ - **Cart Service**: 
+   - Automatically creates a shopping cart for each user and keeps it updated in real time.
+   - Add products, update quantities, or remove items with instant feedback.
 
-## Future Enhancements
-
-- Add YAML based database migrations
-- Add containerization support with Docker and Kubernetes.
-- Develop a frontend application using **React** for user-friendly interaction with the backend services.
-- Introduce **Apache Kafka** for event streaming, enabling real-time processing of orders, payments, and inventory updates.
-- Add **Order service** and **Cart Service**
-- Integrate **Payment service**
-- API documentation
-       
