@@ -6,15 +6,14 @@
 - [Architecture](#architecture)
 - [Category Service](#category-service-category-api)
 - [Product Service](#product-service-product-api)
+- [Cart Service](#cart-service-cart-api)
 
 ## Overview
-FingCart is a microservices-based e-commerce platform developed with Spring Boot, Spring Security, and JWT.
-The project is currently under development, with core features such as REST APIs for product and category management,
-including create, read, update, delete, pagination, and filtering already implemented.
-Both category and product APIs support pagination for efficient data retrieval.
-The system uses Spring Cloud Gateway with a reactive stack for API routing and service discovery,
+FingCart is a microservices-based e-commerce platform developed with Spring Boot, Spring Security, and JWT. 
+The core features such as REST APIs for category, product, cart, authentication and user management are implemented.
+Both category and product APIs support pagination and filtering for efficient data retrieval.
+The system utilizes Spring Cloud Gateway built on Spring WebFlux for non-blocking API routing and service discovery, 
 enabling scalable microservice communication.
-
 WebClient is used for non-blocking, reactive HTTP calls between services.
 Secure user authentication and authorization are implemented using JWT tokens.
 
@@ -511,3 +510,161 @@ Update product quantity
   "path": "/api/products/13"
 }
 ```
+
+## Cart Service (Cart API)
+
+### 1. Create Cart
+
+Base Path: `/api/carts`
+
+**Endpoint:** `POST /api/carts`
+
+**Response:**
+
+```json
+{
+    "id": "b125ab36-b0fd-41f9-85fd-745b4199cb62",
+    "items": [],
+    "totalPrice": 0,
+    "createdAt": "2026-02-11T22:58:31.564002"
+}
+```
+
+### 2. Add Product to Cart
+
+**Endpoint:** `POST /api/carts/b125ab36-b0fd-41f9-85fd-745b4199cb62/cartItems`
+
+**Request:**
+
+```json
+{
+    "productId":12
+}
+```
+
+**Response:**
+
+```json
+{
+  "productId": 12,
+  "quantity": 1,
+  "totalPrice": 65900.00
+}
+```
+
+**Error Response:**
+
+```json
+{
+  "timestamp": "2026-02-11T23:15:31.04854",
+  "status": 500,
+  "error": "Internal Server Error",
+  "message": "Method parameter 'cartId': Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'; UUID string too large",
+  "path": "/api/carts/b125ab36-b0fd-41f9-85fd-745b4199cb620/cartItems"
+}
+```
+
+### 3. Get all Cart Product Items by Cart Id
+
+**Endpoint:** `GET /api/carts/b125ab36-b0fd-41f9-85fd-745b4199cb62`
+
+**Response:**
+
+```json
+{
+  "id": "b125ab36-b0fd-41f9-85fd-745b4199cb62",
+  "items": [
+    {
+      "productId": 12,
+      "quantity": 1,
+      "totalPrice": 65900.00
+    },
+    {
+      "productId": 14,
+      "quantity": 2,
+      "totalPrice": 3000.00
+    }
+  ],
+  "totalPrice": 68900.00,
+  "createdAt": "2026-02-11T22:58:31.564002"
+}
+```
+
+**Error Response:**
+
+```json
+{
+"timestamp": "2026-02-11T23:21:57.726365",
+"status": 404,
+"error": "Cart not found!",
+"message": "Cart not found",
+"path": "/api/carts/b125ab36-b0fd-41f9-85fd-745b4199cb6"
+}
+```
+
+### 4. Update Cart Item Quantity by ProductId
+
+**Endpoint:** `PUT /api/carts/b125ab36-b0fd-41f9-85fd-745b4199cb62/cartItems/14`
+
+**Request:**
+
+```json
+{
+    "quantity": 5
+}
+```
+
+**Response:**
+
+```json
+{
+    "productId": 14,
+    "quantity": 5,
+    "totalPrice": 7500.00
+}
+```
+
+### 5. Remove Cart Item by ProductId
+
+**Endpoint:** `DELETE /api/carts/b125ab36-b0fd-41f9-85fd-745b4199cb62/cartItems/12`
+
+**Response:** `204 No Content`
+
+**Error Responses**
+
+```json
+{
+    "timestamp": "2026-02-11T23:32:44.450362",
+    "status": 404,
+    "error": "Product not found!",
+    "message": "Product not found",
+    "path": "/api/carts/b125ab36-b0fd-41f9-85fd-745b4199cb62/cartItems/10"
+}
+```
+
+```json
+{
+    "timestamp": "2026-02-11T23:33:53.658585",
+    "status": 404,
+    "error": "Product not found!",
+    "message": "Product not found",
+    "path": "/api/carts/b125ab36-b0fd-41f9-85fd-745b4199cb62/cartItems/12"
+}
+
+```
+
+```json
+{
+"timestamp": "2026-02-11T23:34:36.366752",
+"status": 500,
+"error": "Internal Server Error",
+"message": "Method parameter 'cartId': Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'; UUID string too large",
+"path": "/api/carts/b125ab36-b0fd-41f9-85fd-745b4199cb629/cartItems/12"
+}
+```
+
+### 6. Remove all Cart Items (Clear Cart)
+
+**Endpoint:** `DELETE /api/carts/b125ab36-b0fd-41f9-85fd-745b4199cb62/cartItems`
+
+**Response:** `204 No Content`
