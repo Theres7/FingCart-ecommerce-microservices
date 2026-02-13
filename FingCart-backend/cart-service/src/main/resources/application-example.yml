@@ -32,4 +32,4 @@ product-service:
   base-url: http://localhost:9002
 
 server:
-  port: 9004
+  port: 9003

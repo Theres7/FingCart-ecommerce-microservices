@@ -28,7 +28,6 @@ public class Cart {
     @OneToMany(mappedBy = "cart", cascade = CascadeType.MERGE, orphanRemoval = true, fetch = FetchType.EAGER)
     private Set<CartItem> items = new LinkedHashSet<>();
 
-
     public BigDecimal getTotalPrice() {
         return items.stream()
                 .map(CartItem::getTotalPrice)
@@ -43,7 +42,7 @@ public class Cart {
     }
 
     public CartItem addItem(Long productId) {
-        var cartItem = getItem(productId);
+        CartItem cartItem = getItem(productId);
         if (cartItem != null) {
             cartItem.setQuantity(cartItem.getQuantity() + 1);
         } else {
@@ -57,7 +56,7 @@ public class Cart {
     }
 
     public void removeItem(Long productId) {
-        var cartItem = getItem(productId);
+        CartItem cartItem = getItem(productId);
         if (cartItem != null) {
             items.remove(cartItem);
             cartItem.setCart(null);
