@@ -2,7 +2,11 @@ package com.fingcart.authservice.service;
 
 import com.fingcart.authservice.dto.LoginRequestDto;
 import com.fingcart.authservice.dto.LoginResponseDto;
+import com.fingcart.authservice.dto.UserRequestDto;
+import com.fingcart.authservice.dto.UserResponseDto;
 import com.fingcart.authservice.entity.AppUser;
+import com.fingcart.authservice.exception.UserAlreadyExistsException;
+import com.fingcart.authservice.exception.UserNotFoundException;
 import com.fingcart.authservice.jwt.Jwt;
 import com.fingcart.authservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +15,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -19,6 +24,22 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserResponseDto registerUser(UserRequestDto userRequestDto) {
+
+        if (userRepository.existsByUsername(userRequestDto.getUsername())) {
+            throw new UserAlreadyExistsException("Username is already taken");
+        }
+
+        if (userRepository.existsByEmail(userRequestDto.getEmail())) {
+            throw new UserAlreadyExistsException("Email is already registered");
+        }
+
+        String encodedPassword = passwordEncoder.encode(userRequestDto.getPassword());
+        return userService.saveUser(userRequestDto, encodedPassword);
+    }
 
     public LoginResponseDto login(LoginRequestDto request) {
         authenticationManager.authenticate(
@@ -47,6 +68,6 @@ public class AuthService {
     public AppUser getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Long userId = (Long) authentication.getPrincipal();
-        return userRepository.findById(userId).orElse(null);
+        return userRepository.findById(userId).orElseThrow( () -> new UserNotFoundException("User not found"));
     }
 }

@@ -82,7 +82,7 @@ public class UserServiceImpl implements UserService {
         // Use MapStruct to update the entity
         userMapper.updateUserFromDto(request, user);
 
-        // Handle addresses separately if needed
+        // Handle addresses separately
         if(request.getAddresses() != null){
             Set<String> existingKeys = user.getAddresses()
                     .stream()
@@ -108,7 +108,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUser(Long id) {
-        AppUser user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found"));
+        AppUser user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
         if(user != null){
         userRepository.delete(user);
         }
