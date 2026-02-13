@@ -6,12 +6,10 @@ import com.fingcart.authservice.entity.AppUser;
 import com.fingcart.authservice.jwt.Jwt;
 import com.fingcart.authservice.mapper.UserMapper;
 import com.fingcart.authservice.service.AuthService;
-import com.fingcart.authservice.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -20,19 +18,17 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@RefreshScope
 public class AuthController {
     private final JwtConfig jwtConfig;
     private final UserMapper userMapper;
     private final AuthService authService;
-    private final UserService userService;
 
     @PostMapping("/register")
     public ResponseEntity<UserResponseDto> registerUser(
             @Valid @RequestBody UserRequestDto requestDto) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(userService.registerUser(requestDto));
+                .body(authService.registerUser(requestDto));
     }
 
     @PostMapping("/login")
@@ -57,7 +53,7 @@ public class AuthController {
         return new JwtResponseDto(accessToken.toString());
     }
 
-    @GetMapping("/current-user")
+    @GetMapping("/me")
     public ResponseEntity<UserResponseDto> currentUser() {
         AppUser user = authService.getCurrentUser();
         if (user != null) {

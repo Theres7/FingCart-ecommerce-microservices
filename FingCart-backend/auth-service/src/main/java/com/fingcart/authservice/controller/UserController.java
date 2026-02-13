@@ -1,30 +1,18 @@
 package com.fingcart.authservice.controller;
 
-import com.fingcart.authservice.dto.UserRequestDto;
+import com.fingcart.authservice.dto.UpdateUserRequestDto;
 import com.fingcart.authservice.dto.UserResponseDto;
 import com.fingcart.authservice.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cloud.context.config.annotation.RefreshScope;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-@RefreshScope
 public class UserController {
-
     private final UserService userService;
-
-//    @PostMapping
-//    public ResponseEntity<UserResponseDto> registerUser(
-//            @Valid @RequestBody UserRequestDto requestDto) {
-//        return ResponseEntity
-//                .status(HttpStatus.CREATED)
-//                .body(userService.registerUser(requestDto));
-//    }
 
     @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
@@ -35,17 +23,15 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDto> updateUser(
             @PathVariable Long id,
-            @Valid @RequestBody UserRequestDto requestDto) {
-        return ResponseEntity.ok(userService.updateUser(id, requestDto));
+            @Valid @RequestBody UpdateUserRequestDto requestDto) {
+        UserResponseDto updatedUser = userService.updateUser(id, requestDto);
+        return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id){
-        boolean isDeleted = userService.deleteUser(id);
-        if(isDeleted){
-            return ResponseEntity.noContent().build();
-        }
-        return ResponseEntity.notFound().build();
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

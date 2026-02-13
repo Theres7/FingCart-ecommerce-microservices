@@ -1,14 +1,15 @@
 package com.fingcart.authservice.service;
 
+import com.fingcart.authservice.dto.UpdateUserRequestDto;
 import com.fingcart.authservice.dto.UserRequestDto;
 import com.fingcart.authservice.dto.UserResponseDto;
 
 public interface UserService {
-    UserResponseDto registerUser(UserRequestDto request);
+    UserResponseDto saveUser(UserRequestDto request, String encodedPassword);
 
     UserResponseDto getUserById(Long id);
 
-    UserResponseDto updateUser(Long id, UserRequestDto request);
+    UserResponseDto updateUser(Long id, UpdateUserRequestDto request);
 
-    boolean deleteUser(Long id);
+    void deleteUser(Long id);
 }
