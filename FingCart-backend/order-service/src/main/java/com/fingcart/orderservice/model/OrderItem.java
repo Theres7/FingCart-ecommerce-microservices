@@ -15,12 +15,9 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class OrderItem {
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column("id")
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "order_id")
     @Column("order_id")
     private Long orderId;
 
