@@ -7,6 +7,8 @@
 - [Category Service](#category-service-category-api)
 - [Product Service](#product-service-product-api)
 - [Cart Service](#cart-service-cart-api)
+- [Auth Service - Auth API](#auth-api)
+- [Auth Service - User API](#user-api)
 
 ## Overview
 FingCart is a microservices-based e-commerce platform developed with Spring Boot, Spring Security, and JWT. 
@@ -594,11 +596,11 @@ Base Path: `/api/carts`
 
 ```json
 {
-"timestamp": "2026-02-11T23:21:57.726365",
-"status": 404,
-"error": "Cart not found!",
-"message": "Cart not found",
-"path": "/api/carts/b125ab36-b0fd-41f9-85fd-745b4199cb6"
+  "timestamp": "2026-02-11T23:21:57.726365",
+  "status": 404,
+  "error": "Cart not found!",
+  "message": "Cart not found",
+  "path": "/api/carts/b125ab36-b0fd-41f9-85fd-745b4199cb6"
 }
 ```
 
@@ -650,16 +652,15 @@ Base Path: `/api/carts`
     "message": "Product not found",
     "path": "/api/carts/b125ab36-b0fd-41f9-85fd-745b4199cb62/cartItems/12"
 }
-
 ```
 
 ```json
 {
-"timestamp": "2026-02-11T23:34:36.366752",
-"status": 500,
-"error": "Internal Server Error",
-"message": "Method parameter 'cartId': Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'; UUID string too large",
-"path": "/api/carts/b125ab36-b0fd-41f9-85fd-745b4199cb629/cartItems/12"
+  "timestamp": "2026-02-11T23:34:36.366752",
+  "status": 500,
+  "error": "Internal Server Error",
+  "message": "Method parameter 'cartId': Failed to convert value of type 'java.lang.String' to required type 'java.util.UUID'; UUID string too large",
+  "path": "/api/carts/b125ab36-b0fd-41f9-85fd-745b4199cb629/cartItems/12"
 }
 ```
 
@@ -668,3 +669,372 @@ Base Path: `/api/carts`
 **Endpoint:** `DELETE /api/carts/b125ab36-b0fd-41f9-85fd-745b4199cb62/cartItems`
 
 **Response:** `204 No Content`
+
+## Auth Service (Auth API, User API)
+
+## Auth API
+
+Base Path: `/api/auth`
+
+### 1. Register User
+
+**Endpoint:** `POST /api/auth/register`
+
+**Request:**
+
+```json
+{
+  "name": "Meera",
+  "username":"meera12",
+  "email":"meera2@gmail.com",
+  "password":"P12346",
+  "addresses": [
+    {
+      "street": "Spring 123",
+      "city": "Spring city",
+      "district":"Kottayam",
+      "state": "Kerala",
+      "pincode":"612346"
+    },
+    {
+      "street": "Web 125",
+      "city": "Web city",
+      "district":"Calicut",
+      "state": "Kerala",
+      "pincode":"612347"
+    }]
+}
+```
+
+**Response:**
+
+```json
+{
+  "id": 20,
+  "name": "Meera",
+  "username": "meera12",
+  "email": "meera2@gmail.com",
+  "addresses": [
+    {
+      "id": 31,
+      "state": "Kerala",
+      "district": "Kottayam",
+      "city": "Spring city",
+      "street": "Spring 123",
+      "pincode": "612346"
+    },
+    {
+      "id": 32,
+      "state": "Kerala",
+      "district": "Calicut",
+      "city": "Web city",
+      "street": "Web 125",
+      "pincode": "612347"
+    }
+  ]
+}
+```
+
+**Error Responses:**
+
+```json
+{
+    "path": "/api/auth/register",
+    "error": "Bad Request",
+    "message": "Username is already taken",
+    "timestamp": "2026-02-15T22:09:31.023808",
+    "status": 409
+}
+```
+
+```json
+{
+  "path": "/api/auth/register",
+  "error": "Bad Request",
+  "message": "Email is already registered",
+  "timestamp": "2026-02-15T22:10:50.915307",
+  "status": 409
+}
+```
+
+### 2. Login User
+
+Generates a JWT (JSON Web Token) Token as Access Token
+**Endpoint:** `POST /api/auth/login`
+
+**Request:**
+
+```json
+{
+    "username":"meera12",
+    "password":"P12346"
+}
+```
+**Response:**
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMCIsInVzZXJuYW1lIjoibWVlcmExMiIsImVtYWlsIjoibWVlcmEyQGdtYWlsLmNvbSIsIm5hbWUiOiJNZWVyYSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzcxMTc1NDgzLCJleHAiOjE3NzExNzYzODN9.0D0tl3jaB_bIzQD04B-z-mY_8J1rvbq8hB_9KZN6AYM"
+}
+```
+
+**Decoded Header:**
+
+```json
+{
+  "alg": "HS256"
+}
+```
+
+**Decoded Payload:**
+
+```json
+{
+  "sub": "20",
+  "username": "meera12",
+  "email": "meera2@gmail.com",
+  "name": "Meera",
+  "role": "USER",
+  "iat": 1771173983,
+  "exp": 1771174883
+}
+```
+
+**Error Response:**
+
+```json
+{
+    "error": "Internal Server Error",
+    "message": "Bad credentials",
+    "timestamp": "2026-02-15T22:25:17.309126",
+    "status": 500
+}
+```
+
+### 3. Refresh Access Token
+
+**Endpoint:** `POST /api/auth/refresh`
+
+**Refresh Token at Cookies:**
+
+```
+refreshToken=eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMCIsInVzZXJuYW1lIjoibWVlcmExMiIsImVtYWlsIjoibWVlcmEyQGdtYWlsLmNvbSIsIm5hbWUiOiJNZWVyYSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzcxMTc1NDgzLCJleHAiOjE3NzcyMjM0ODN9.TS7FFNQKOgggGCAQ_OqBJc1Es4tzIeqB5sq0H0rOPHI; Path=/api/auth/refresh; Secure; HttpOnly; Expires=Sun, 26 Apr 2026 17:11:23 GMT;
+
+```
+
+**Response:**
+
+```json
+{
+  "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIyMCIsInVzZXJuYW1lIjoibWVlcmExMiIsImVtYWlsIjoibWVlcmEyQGdtYWlsLmNvbSIsIm5hbWUiOiJNZWVyYSIsInJvbGUiOiJVU0VSIiwiaWF0IjoxNzcxMTc1NTE4LCJleHAiOjE3NzExNzY0MTh9._NDZhbBhZQE3SGl7pDUmBnVc61cMigl6NQv0CjkIU2s"
+}
+```
+**Response:**
+
+```json
+{
+  "error": "Internal Server Error",
+  "message": "Required cookie 'refreshToken' for method parameter type String is not present",
+  "timestamp": "2026-02-15T22:47:06.146303",
+  "status": 500
+}
+```
+
+
+### 4. Get Current User
+
+Include the token generated after login as a Bearer token in the request header using 'Authorization' Key.
+
+**Endpoint:** `GET /api/auth/me`
+
+**Response:**
+
+```json
+{
+    "id": 20,
+    "name": "Meera",
+    "username": "meera12",
+    "email": "meera2@gmail.com",
+    "addresses": [
+        {
+            "id": 31,
+            "state": "Kerala",
+            "district": "Kottayam",
+            "city": "Spring city",
+            "street": "Spring 123",
+            "pincode": "612346"
+        },
+        {
+            "id": 32,
+            "state": "Kerala",
+            "district": "Calicut",
+            "city": "Web city",
+            "street": "Web 125",
+            "pincode": "612347"
+        }
+    ]
+}
+
+```
+
+## User API
+
+Base Path: `/api/users`
+
+### 1. Get User By Id
+
+**Endpoint:** `GET /api/users/20`
+
+**Response:**
+
+```json
+{
+    "id": 20,
+    "name": "Meera",
+    "username": "meera12",
+    "email": "meera2@gmail.com",
+    "addresses": [
+        {
+            "id": 31,
+            "state": "Kerala",
+            "district": "Kottayam",
+            "city": "Spring city",
+            "street": "Spring 123",
+            "pincode": "612346"
+        },
+        {
+            "id": 32,
+            "state": "Kerala",
+            "district": "Calicut",
+            "city": "Web city",
+            "street": "Web 125",
+            "pincode": "612347"
+        }
+    ]
+}
+```
+
+**Error Response:**
+
+```json
+{
+    "path": "/api/users/25",
+    "error": "Not Found",
+    "message": "User with id 25 not found",
+    "timestamp": "2026-02-15T23:18:57.451041",
+    "status": 404
+}
+```
+
+### 2. Update User
+
+**Endpoint:** `PUT /api/users/20`
+
+**Request:**
+
+```json
+{
+  "name": "Meera",
+  "username":"meera24",
+  "email":"meera2@gmail.com",
+  "addresses": [
+    {
+      "street": "Spring 123",
+      "city": "Spring power city",
+      "district":"Kottayam",
+      "state": "Kerala",
+      "pincode":"612346"
+    }]
+}
+
+```
+
+**Response:**
+
+```json
+{
+    "id": 20,
+    "name": "Meera",
+    "username": "meera24",
+    "email": "meera2@gmail.com",
+    "addresses": [
+        {
+            "id": 31,
+            "state": "Kerala",
+            "district": "Kottayam",
+            "city": "Spring city",
+            "street": "Spring 123",
+            "pincode": "612346"
+        },
+        {
+            "id": 32,
+            "state": "Kerala",
+            "district": "Calicut",
+            "city": "Web city",
+            "street": "Web 125",
+            "pincode": "612347"
+        },
+        {
+            "id": 33,
+            "state": "Kerala",
+            "district": "Kottayam",
+            "city": "Spring power city",
+            "street": "Spring 123",
+            "pincode": "612346"
+        }
+    ]
+}
+```
+
+**Error Response:**
+
+```json
+{
+  "path": "/api/users/25",
+  "error": "Access Denied!",
+  "message": "You can only update your own account",
+  "timestamp": "2026-02-15T23:21:06.334664",
+  "status": 403
+}
+```
+
+### 3. Delete User
+
+An ADMIN role token is required to delete a user. Login with admin credentials
+
+**Endpoint:** `DELETE /api/users/20`
+
+**Admin Token:**
+
+```json
+{
+    "token": "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxOSIsInVzZXJuYW1lIjoic2hpbmUxMiIsImVtYWlsIjoic2hpbmUxQGdtYWlsLmNvbSIsIm5hbWUiOiJTaGluZSIsInJvbGUiOiJBRE1JTiIsImlhdCI6MTc3MTE3ODQwNCwiZXhwIjoxNzcxMTc5MzA0fQ.f9AuZ4c8FxaUAEXq5AT_-1PSKWMUbSntnllUiLxiqGw"
+}
+```
+
+**Decoded Payload:**
+
+```json
+{
+  "sub": "19",
+  "username": "shine12",
+  "email": "shine1@gmail.com",
+  "name": "Shine",
+  "role": "ADMIN",
+  "iat": 1771178404,
+  "exp": 1771179304
+}
+```
+**Response:** `204 No Content`
+
+**Error Responses**
+
+```json
+{
+    "path": "/api/users/20",
+    "error": "Not Found",
+    "message": "User not found",
+    "timestamp": "2026-02-15T23:33:20.941632",
+    "status": 404
+}
+```
