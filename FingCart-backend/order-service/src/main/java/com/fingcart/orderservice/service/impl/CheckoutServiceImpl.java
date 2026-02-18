@@ -19,6 +19,7 @@ import reactor.core.publisher.Mono;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -30,22 +31,15 @@ public class CheckoutServiceImpl implements CheckoutService {
     private final AuthClient authClient;
 
     public Mono<CheckoutResponse> checkout(CheckoutRequest request, String token) {
-        return cartClient.getCartById(request.getCartId())
-                .onErrorResume(WebClientResponseException.NotFound.class,
-                        e -> Mono.error(new CartNotFoundException("Cart not found for " + request.getCartId())))
+        return validateCartId(request.getCartId())
                 .flatMap(cart -> {
                     if (cart.getItems().isEmpty()) {
                         return Mono.error(new CartEmptyException("Cart is empty"));
                     }
 
                     // Get user, create order, save it, clear cart, and return response
-                    return authClient.getCurrentUser(token)
-                            .onErrorResume(WebClientResponseException.Unauthorized.class, e -> {
-                                log.error("Unauthorized access with token");
-                                return Mono.error(new UnauthorizedException("Invalid or expired token"));
-                            })
+                    return validateUserAuthentication(token)
                             .flatMap(user -> {
-                                // Create and save order first
                                 Order order = createOrderFromCart(cart, user.getId());
                                 return orderRepository.save(order)
                                         .flatMap(savedOrder -> {
@@ -60,6 +54,20 @@ public class CheckoutServiceImpl implements CheckoutService {
                             .flatMap(savedOrder -> cartClient.clearCart(request.getCartId())
                                     .thenReturn(new CheckoutResponse(savedOrder.getId(),
                                 "http://fingcart.com/demo-orders/checkout/"+savedOrder.getId())) );
+                });
+    }
+
+    public Mono<CartResponseDto> validateCartId(UUID cartId){
+        return cartClient.getCartById(cartId)
+                .onErrorResume(WebClientResponseException.NotFound.class,
+                        ex -> Mono.error(new CartNotFoundException("Cart not found for " + cartId)));
+    }
+
+    public Mono<UserResponseDto> validateUserAuthentication(String token){
+        return authClient.getCurrentUser(token)
+                .onErrorResume(WebClientResponseException.Unauthorized.class, ex -> {
+                    log.error("Unauthorized access with token");
+                    return Mono.error(new UnauthorizedException("Invalid or expired token"));
                 });
     }
 
