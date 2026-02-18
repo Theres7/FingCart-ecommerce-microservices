@@ -105,20 +105,38 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(OrderNotFoundException.class)
     public Mono<ResponseEntity<ErrorResponse>> handleOrderNotFoundException(
-            OrderNotFoundException e,
+            OrderNotFoundException ex,
             ServerWebExchange exchange) {  //  Changed to ServerWebExchange
 
-        log.error("Order not found: {}", e.getMessage());
+        log.error("Order not found: {}", ex.getMessage());
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .timestamp(LocalDateTime.now())
                 .status(HttpStatus.NOT_FOUND.value())
                 .error("Order Not Found")
-                .message(e.getMessage())
+                .message(ex.getMessage())
                 .path(exchange.getRequest().getPath().value())
                 .build();
 
         return Mono.just(ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse));
+    }
+
+    @ExceptionHandler(AuthServiceUnavailableException.class)
+    public ResponseEntity<ErrorResponse> handleAuthServiceUnavailable(
+            Exception ex,
+            ServerWebExchange exchange) {
+
+        log.error("Auth Service Unavailable error", ex);
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .timestamp(LocalDateTime.now())
+                .status(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .error(HttpStatus.SERVICE_UNAVAILABLE.getReasonPhrase())
+                .message("Authentication service unavailable")
+                .path(exchange.getRequest().getPath().value())
+                .build();
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
     }
 
     @ExceptionHandler(Exception.class)

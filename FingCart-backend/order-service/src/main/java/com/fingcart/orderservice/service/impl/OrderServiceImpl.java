@@ -30,7 +30,7 @@ public class OrderServiceImpl implements OrderService {
 
     public Flux<OrderResponseDto> getAllOrders(String token){
         return authClient.getCurrentUser(token)
-                .onErrorResume(WebClientResponseException.class, e -> {
+                .onErrorResume(WebClientResponseException.class, ex -> {
             log.error("Unauthorized access with token");
             return Mono.error(new UnauthorizedException("Invalid or expired token")); })
                 .flatMapMany(user -> orderRepository.findAllByCustomerId(user.getId()))
