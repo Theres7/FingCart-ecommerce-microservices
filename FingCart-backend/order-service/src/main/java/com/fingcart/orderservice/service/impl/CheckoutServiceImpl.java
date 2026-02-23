@@ -32,28 +32,29 @@ public class CheckoutServiceImpl implements CheckoutService {
 
     public Mono<CheckoutResponse> checkout(CheckoutRequest request, String token) {
         return validateCartId(request.getCartId())
+                .filter(cart -> !cart.getItems().isEmpty())
+                .switchIfEmpty(Mono.error(new CartEmptyException("Cart is empty")))
                 .flatMap(cart -> {
-                    if (cart.getItems().isEmpty()) {
-                        return Mono.error(new CartEmptyException("Cart is empty"));
-                    }
 
                     // Get user, create order, save it, clear cart, and return response
                     return validateUserAuthentication(token)
-                            .flatMap(user -> {
-                                Order order = createOrderFromCart(cart, user.getId());
-                                return orderRepository.save(order)
-                                        .flatMap(savedOrder -> {
-                                            List<OrderItem> orderItems = createOrderItems(cart, savedOrder);
-
-                                            // Save all order items
-                                            return orderItemRepository.saveAll(orderItems)
-                                                    .collectList()
-                                                    .thenReturn(savedOrder);
-                                        });
-                            })
+                            .flatMap(user -> saveOrderWithItems(cart, user.getId()) )
                             .flatMap(savedOrder -> cartClient.clearCart(request.getCartId())
                                     .thenReturn(new CheckoutResponse(savedOrder.getId(),
                                 "http://fingcart.com/demo-orders/checkout/"+savedOrder.getId())) );
+                });
+    }
+
+    public Mono<Order> saveOrderWithItems(CartResponseDto cart, Long userId){
+        Order order = createOrderFromCart(cart, userId);
+        return orderRepository.save(order)
+                .flatMap(savedOrder -> {
+                    List<OrderItem> orderItems = createOrderItems(cart, savedOrder);
+
+                    // Save all order items
+                    return orderItemRepository.saveAll(orderItems)
+                            .collectList()
+                            .thenReturn(savedOrder);
                 });
     }
 
