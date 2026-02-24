@@ -30,7 +30,7 @@ public class ProductController {
         return ResponseEntity.status(201).body(product);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/{id:\\d+}")
     public ResponseEntity<ProductResponseDto> getProductById(@PathVariable Long id) {
         log.debug("Fetching product with Id: {}", id);
         ProductResponseDto product = productService.getProductById(id);
@@ -73,7 +73,8 @@ public class ProductController {
             @PathVariable String categoryId,
             @PageableDefault(size = 10) Pageable pageable) {
         log.debug("Fetching products for category Id: {}", categoryId);
-        return ResponseEntity.ok(productService.getProductsByCategory(categoryId, pageable));
+        Page<ProductResponseDto> productsByCategory = productService.getProductsByCategory(categoryId, pageable);
+        return ResponseEntity.ok(productsByCategory);
     }
 
 }
