@@ -1,5 +1,8 @@
 # FingCart - E-commerce Application using Spring Boot + Spring Security + JWT + Microservices
 
+FingCart is a microservices-based e-commerce platform built using Spring Boot, Spring Cloud, Spring Security, and JWT, 
+designed to provide secure, scalable, and efficient service communication.
+
 ## Table of Contents
 - [Overview](#overview)
 - [Tech Stack](#tech-stack)
@@ -9,19 +12,19 @@
 - [Cart Service](#cart-service-cart-api)
 - [Auth Service - Auth API](#auth-api)
 - [Auth Service - User API](#user-api)
+- [Order Service - Checkout API](#checkout-api)
+- [Order Service - Order API](#order-api)
 
-## Overview
-FingCart is a microservices-based e-commerce platform developed with Spring Boot, Spring Security, and JWT. 
-The core features such as REST APIs for category, product, cart, authentication and user management are implemented.
-Both category and product APIs support pagination and filtering for efficient data retrieval.
-The system utilizes Spring Cloud Gateway built on Spring WebFlux for non-blocking API routing and service discovery, 
-enabling scalable microservice communication.
-WebClient is used for non-blocking, reactive HTTP calls between services.
-Secure user authentication and authorization are implemented using JWT tokens.
+## Project Overview
+The primary goal of this project is to implement a Spring Boot microservices architecture and evaluate 
+how independent services communicate with each other through an API Gateway.
+
+All services are registered with a Eureka Server (Service Registry), and service routing is configured 
+through the API Gateway.
 
 ## Tech Stack
 
-- Java
+- Java 8+
 - Spring Boot
 - Hibernate / JPA
 - Spring Cloud
@@ -29,6 +32,62 @@ Secure user authentication and authorization are implemented using JWT tokens.
 - WebClient
 - PostgreSQL / MySQL / MongoDB
 - Docker
+
+---
+
+## Core Features
+
+### REST APIs
+- Category management
+- Product management
+- Cart management
+- Authentication
+- User management
+- Checkout and Order management
+
+### Data Handling
+- Pagination support for category and product APIs
+- Filtering for efficient data retrieval
+
+### API Gateway & Service Communication
+- Centralized routing using **Spring Cloud Gateway**
+- Service discovery via Eureka
+- Supports both blocking and reactive (non-blocking) communication
+
+### Security
+- Secure authentication and authorization using **JWT tokens**
+
+---
+
+## Reactive Microservice
+
+The **Order Service** follows a **reactive (non-blocking) programming model**, enabling better performance, 
+responsiveness, and scalability under high load.
+
+---
+
+## Implementation Highlights
+
+### Java 8 Features
+- Lambda expressions
+- Method references
+- Stream API
+- Optional class
+
+### Lombok
+Reduces boilerplate code using:
+
+- `@Getter` and `@Setter`
+- `@NoArgsConstructor`
+- `@AllArgsConstructor`
+- `@Builder`
+- `@RequiredArgsConstructor`
+
+### MapStruct
+- Used for mapping between DTOs and Models
+- Automatically updates model fields from DTOs (Used in the **User API of the auth-service**)
+
+---
 
 **Base URL:** `http://localhost:9000`
 
@@ -487,11 +546,11 @@ Update product quantity
 
 ```json
 {
-  "timestamp": "2026-02-10T22:07:19.692649",
+  "timestamp": "2026-02-24T22:34:09.258423",
   "status": 400,
   "error": "Bad Request",
-  "message": "Category validation unavailable. Please try again later.",
-  "path": "/api/products/category/68ca4d2b17556094354be368"
+  "message": "Invalid category ID: 698a15bd475eb29e33bd839",
+  "path": "/api/products/category/698a15bd475eb29e33bd839"
 }
 ```
 
@@ -1027,7 +1086,7 @@ An ADMIN role token is required to delete a user. Login with admin credentials
 ```
 **Response:** `204 No Content`
 
-**Error Responses**
+**Error Response**
 
 ```json
 {
@@ -1038,3 +1097,255 @@ An ADMIN role token is required to delete a user. Login with admin credentials
     "status": 404
 }
 ```
+
+## Order Service (Checkout API, Order API)
+
+## Checkout API
+
+Base Path: `/api/checkout`
+
+### 1. Checkout Cart
+
+Include the JWT Bearer token in the request header under the Authorization header.
+
+**Endpoint:** `POST /api/checkout`
+
+**Request:**
+
+```json
+{
+  "cartId":"b125ab36-b0fd-41f9-85fd-745b4199cb62"
+}
+```
+
+**Response:**
+
+```json
+{
+  "orderId": 4,
+  "checkoutUrl": "http://fingcart.com/demo-orders/checkout/4"
+}
+```
+**Error Response**
+
+```json
+{
+    "timestamp": "2026-02-24T22:54:00",
+    "status": 400,
+    "error": "Bad Request",
+    "message": "Cart is empty",
+    "path": "/api/checkout"
+}
+```
+```json
+{
+"timestamp": "2026-02-25T22:42:22",
+"status": 401,
+"error": "Unauthorized",
+"message": "Invalid or expired token",
+"path": "/api/checkout"
+}
+```
+```json
+{
+"timestamp": "2026-02-24T22:54:24",
+"status": 500,
+"error": "Internal Server Error",
+"message": "An unexpected error occurred",
+"path": "/api/checkout"
+}
+```
+
+## Order API
+
+Base Path: `/api/orders`
+
+### 1. Get all Orders of Current customer 
+
+Include the JWT Bearer token in the request header under the Authorization header.
+
+**Endpoint:** `POST /api/orders`
+
+**Response:**
+
+```json
+[
+  {
+    "id": 1,
+    "customerId": 19,
+    "status": "PENDING",
+    "createdAt": "2026-02-25T22:14:50.678275",
+    "totalPrice": 1500.00
+  },
+  {
+    "id": 2,
+    "customerId": 19,
+    "status": "PENDING",
+    "createdAt": "2026-02-25T22:16:33.247137",
+    "totalPrice": 70400.00
+  }
+]
+
+```
+**Error Response**
+
+```json
+{
+    "timestamp": "2026-02-25T22:58:56",
+    "status": 401,
+    "error": "Unauthorized",
+    "message": "Invalid or expired token",
+    "path": "/api/orders"
+}
+```
+
+### 2. Get Order with Items by Id
+
+**Endpoint:** `POST /api/orders/4`
+
+**Response:**
+
+```json
+{
+  "id": 4,
+  "customerId": 21,
+  "status": "PENDING",
+  "createdAt": "2026-02-25T22:39:50.018443",
+  "totalPrice": 212700.00,
+  "orderItems": [
+    {
+      "id": 6,
+      "orderId": 4,
+      "productId": 12,
+      "quantity": 3,
+      "totalPrice": 197700.00
+    },
+    {
+      "id": 7,
+      "orderId": 4,
+      "productId": 14,
+      "quantity": 10,
+      "totalPrice": 15000.00
+    }
+  ]
+}
+```
+**Error Response**
+
+```json
+{
+    "timestamp": "2026-02-25T22:56:30",
+    "status": 404,
+    "error": "Order Not Found",
+    "message": "Order not found for 40",
+    "path": "/api/orders/40"
+}
+```
+
+### 3. Get all Orders with Order Items
+
+**Endpoint:** `POST /api/orders/ordersWithItems`
+
+**Response:**
+
+```json
+[
+    {
+        "id": 1,
+        "customerId": 19,
+        "status": "PENDING",
+        "createdAt": "2026-02-25T22:14:50.678275",
+        "totalPrice": 1500.00,
+        "orderItems": [
+            {
+                "id": 1,
+                "orderId": 1,
+                "productId": 14,
+                "quantity": 1,
+                "totalPrice": 1500.00
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "customerId": 19,
+        "status": "PENDING",
+        "createdAt": "2026-02-25T22:16:33.247137",
+        "totalPrice": 70400.00,
+        "orderItems": [
+            {
+                "id": 2,
+                "orderId": 2,
+                "productId": 14,
+                "quantity": 3,
+                "totalPrice": 4500.00
+            },
+            {
+                "id": 3,
+                "orderId": 2,
+                "productId": 12,
+                "quantity": 1,
+                "totalPrice": 65900.00
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "customerId": 21,
+        "status": "PENDING",
+        "createdAt": "2026-02-25T22:35:35.569748",
+        "totalPrice": 133300.00,
+        "orderItems": [
+            {
+                "id": 4,
+                "orderId": 3,
+                "productId": 12,
+                "quantity": 2,
+                "totalPrice": 131800.00
+            },
+            {
+                "id": 5,
+                "orderId": 3,
+                "productId": 14,
+                "quantity": 1,
+                "totalPrice": 1500.00
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "customerId": 21,
+        "status": "PENDING",
+        "createdAt": "2026-02-25T22:39:50.018443",
+        "totalPrice": 212700.00,
+        "orderItems": [
+            {
+                "id": 6,
+                "orderId": 4,
+                "productId": 12,
+                "quantity": 3,
+                "totalPrice": 197700.00
+            },
+            {
+                "id": 7,
+                "orderId": 4,
+                "productId": 14,
+                "quantity": 10,
+                "totalPrice": 15000.00
+            }
+        ]
+    }
+]
+```
+**Error Response**
+
+```json
+{
+    "timestamp": "2026-02-25T22:55:16",
+    "status": 500,
+    "error": "Internal Server Error",
+    "message": "An unexpected error occurred",
+    "path": "/api/orders/ordersWithItem"
+}
+```
+
