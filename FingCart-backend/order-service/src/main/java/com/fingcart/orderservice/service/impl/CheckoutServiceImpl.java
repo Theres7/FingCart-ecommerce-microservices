@@ -15,8 +15,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 import reactor.core.publisher.Mono;
-
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -79,7 +77,7 @@ public class CheckoutServiceImpl implements CheckoutService {
                         item.getProductId(),
                         item.getQuantity(),
                         item.getTotalPrice()
-                                .multiply(BigDecimal.valueOf(item.getQuantity())) ))
+                ))
                 .toList();
     }
 
