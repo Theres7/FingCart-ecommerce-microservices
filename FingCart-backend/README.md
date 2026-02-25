@@ -4,7 +4,7 @@ FingCart is a microservices-based e-commerce platform built using Spring Boot, S
 designed to provide secure, scalable, and efficient service communication.
 
 ## Table of Contents
-- [Overview](#overview)
+- [Overview](#project-overview)
 - [Tech Stack](#tech-stack)
 - [Architecture](#architecture)
 - [Category Service](#category-service-category-api)
